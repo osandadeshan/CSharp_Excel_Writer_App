@@ -4,9 +4,9 @@ using GemBox.Spreadsheet;
 
 namespace ExcelWriterApp
 {
-    public class BasicExcelWriter
+    public static class BasicExcelWriter
     {
-        public void Write()
+        public static void Write()
         {
             // If using Professional version, put your serial key below.
             SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
@@ -18,7 +18,7 @@ namespace ExcelWriterApp
             var worksheet = workbook.Worksheets.Add("Skyscrapers");
 
             // Write title to Excel cell.
-            worksheet.Cells["A1"].Value = "List of tallest buildings (2021):";
+            // worksheet.Cells["A1"].Value = "List of tallest buildings (2021):";
 
             // Tabular sample data for writing into an Excel file.
             var skyscrapers = new object[,]
@@ -47,13 +47,13 @@ namespace ExcelWriterApp
             };
 
             // Write header data to Excel cells.
-            for (int col = 0; col < skyscrapers.GetLength(1); col++)
+            for (var col = 0; col < skyscrapers.GetLength(1); col++)
                 worksheet.Cells[0, col].Value = skyscrapers[0, col];
 
             // Write sample data and formatting to Excel cells.
-            for (int row = 0; row < skyscrapers.GetLength(0); row++)
+            for (var row = 0; row < skyscrapers.GetLength(0); row++)
             {
-                for (int col = 0; col < skyscrapers.GetLength(1); col++)
+                for (var col = 0; col < skyscrapers.GetLength(1); col++)
                 {
                     var cell = worksheet.Cells[row, col];
                     cell.Value = skyscrapers[row, col];

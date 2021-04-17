@@ -4,9 +4,9 @@ using GemBox.Spreadsheet;
 
 namespace ExcelWriterApp
 {
-    public class StylesEmbeddedExcelWriter
+    public static class StylesEmbeddedExcelWriter
     {
-        public void Write()
+        public static void Write()
         {
             // If using Professional version, put your serial key below.
             SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
@@ -62,7 +62,7 @@ namespace ExcelWriterApp
             worksheet.Columns["J"].SetWidth(5, LengthUnit.ZeroCharacterWidth); // Top 20
 
             // Write header data to Excel cells.
-            for (int col = 0; col < skyscrapers.GetLength(1); col++)
+            for (var col = 0; col < skyscrapers.GetLength(1); col++)
                 worksheet.Cells[3, col].Value = skyscrapers[0, col];
             worksheet.Cells["E3"].Value = "Height";
 
@@ -75,9 +75,11 @@ namespace ExcelWriterApp
             worksheet.Cells.GetSubrange("H3:H4").Merged = true; // Built (Year)
 
             // // Set header cells formatting.
-            var style = new CellStyle();
-            style.HorizontalAlignment = HorizontalAlignmentStyle.Center;
-            style.VerticalAlignment = VerticalAlignmentStyle.Center;
+            var style = new CellStyle
+            {
+                HorizontalAlignment = HorizontalAlignmentStyle.Center,
+                VerticalAlignment = VerticalAlignmentStyle.Center
+            };
             style.FillPattern.SetSolid(SpreadsheetColor.FromArgb(237, 125, 49));
             style.Font.Weight = ExcelFont.BoldWeight;
             style.Font.Color = SpreadsheetColor.FromName(ColorName.White);
@@ -87,10 +89,12 @@ namespace ExcelWriterApp
             worksheet.Cells.GetSubrange("A3:H4").Style = style;
 
             // // Write "Top 10" cells.
-            style = new CellStyle();
-            style.HorizontalAlignment = HorizontalAlignmentStyle.Center;
-            style.VerticalAlignment = VerticalAlignmentStyle.Center;
-            style.Font.Weight = ExcelFont.BoldWeight;
+            style = new CellStyle
+            {
+                HorizontalAlignment = HorizontalAlignmentStyle.Center,
+                VerticalAlignment = VerticalAlignmentStyle.Center,
+                Font = {Weight = ExcelFont.BoldWeight}
+            };
             var mergedRange = worksheet.Cells.GetSubrange("I5:I14");
             mergedRange.Merged = true;
             mergedRange.Value = "T o p   1 0";
@@ -110,9 +114,9 @@ namespace ExcelWriterApp
             mergedRange.Style = style;
 
             // Write sample data and formatting to Excel cells.
-            for (int row = 0; row < skyscrapers.GetLength(0) - 1; row++)
+            for (var row = 0; row < skyscrapers.GetLength(0) - 1; row++)
             {
-                for (int col = 0; col < skyscrapers.GetLength(1); col++)
+                for (var col = 0; col < skyscrapers.GetLength(1); col++)
                 {
                     var cell = worksheet.Cells[row + 4, col];
                     cell.Value = skyscrapers[row + 1, col];
@@ -126,10 +130,12 @@ namespace ExcelWriterApp
                         cell.Style.HorizontalAlignment = HorizontalAlignmentStyle.Center;
                     if (col > 3)
                         cell.Style.Font.Name = "Courier New";
-                    if (col == 4)
-                        cell.Style.NumberFormat = "#\" m\"";
-                    if (col == 5)
-                        cell.Style.NumberFormat = "#\" ft\"";
+                    cell.Style.NumberFormat = col switch
+                    {
+                        4 => "#\" m\"",
+                        5 => "#\" ft\"",
+                        _ => cell.Style.NumberFormat
+                    };
                 }
             }
 
